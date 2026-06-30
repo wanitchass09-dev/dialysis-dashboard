@@ -3,958 +3,187 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>หน่วยไตเทียม · Dashboard 2569</title>
-<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<title>หน่วยไตเทียม Dashboard 2569</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
 <style>
-:root {
-  --cream:   #FDF8F3;
-  --warm:    #F5EDE0;
-  --border:  #EAE0D5;
-
-  --rose:    #F4A7B9; --rose-l: #FDF0F4; --rose-d: #B5566B;
-  --sky:     #A8CCE8; --sky-l:  #EEF6FC; --sky-d:  #4A7FA5;
-  --mint:    #A8D5BA; --mint-l: #EDF8F2; --mint-d: #3D7A58;
-  --lav:     #C4B5E8; --lav-l:  #F4F1FC; --lav-d:  #6A52A8;
-  --peach:   #F4C4A0; --peach-l:#FEF5EE; --peach-d:#B56A30;
-  --sage:    #B5CEB8; --sage-l: #EEF5EF; --sage-d: #4A7050;
-
-  --ink:     #2C2420;
-  --ink2:    #6B5A52;
-  --ink3:    #A89880;
-  --danger:  #E05555;
-  --danger-l:#FDEAEA;
-  --good:    #5A9E70;
-  --good-l:  #EBF7EF;
-  --warn:    #E8933A;
-  --warn-l:  #FEF3E8;
-
-  --r: 16px;
-  --r-lg: 24px;
-  --shadow: 0 2px 20px rgba(44,36,32,.07);
-  --shadow-md: 0 8px 32px rgba(44,36,32,.12);
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: 'Sarabun', sans-serif;
-  background: var(--cream);
-  color: var(--ink);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* ── SETUP SCREEN ── */
-#setup {
-  min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--cream);
-  padding: 24px;
-}
-.setup-card {
-  background: #fff;
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow-md);
-  padding: 48px 44px;
-  max-width: 560px; width: 100%;
-  border-top: 4px solid var(--rose);
-}
-.setup-icon { font-size: 44px; margin-bottom: 16px; }
-.setup-card h1 { font-family: 'Mitr', sans-serif; font-size: 24px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
-.setup-card p  { font-size: 14px; color: var(--ink2); line-height: 1.7; margin-bottom: 28px; }
-
-.steps { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
-.step  { display: flex; gap: 12px; align-items: flex-start; }
-.step-n {
-  width: 24px; height: 24px; border-radius: 50%;
-  background: var(--sky); color: var(--sky-d);
-  font-size: 12px; font-weight: 600; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center; margin-top: 1px;
-}
-.step-t { font-size: 13px; color: var(--ink2); line-height: 1.6; }
-.step-t strong { color: var(--ink); }
-.step-t code {
-  background: var(--warm); border-radius: 4px;
-  padding: 1px 6px; font-size: 11px; font-family: monospace; color: var(--ink);
-}
-
-.url-row { display: flex; gap: 8px; }
-.url-input {
-  flex: 1; padding: 12px 16px;
-  border: 2px solid var(--border); border-radius: 12px;
-  font-family: 'Sarabun', sans-serif; font-size: 13px; color: var(--ink);
-  outline: none; transition: border .2s; background: var(--cream);
-}
-.url-input:focus { border-color: var(--sky-d); }
-.url-input::placeholder { color: var(--ink3); font-size: 12px; }
-.btn-connect {
-  padding: 12px 22px; background: var(--sky-d); color: #fff;
-  border: none; border-radius: 12px; font-family: 'Sarabun', sans-serif;
-  font-size: 14px; font-weight: 600; cursor: pointer; transition: all .2s;
-  white-space: nowrap;
-}
-.btn-connect:hover { background: var(--ink); }
-.err-msg { font-size: 12px; color: var(--danger); margin-top: 8px; display: none; }
-.btn-demo {
-  width: 100%; margin-top: 12px; padding: 10px;
-  background: transparent; border: 2px dashed var(--border);
-  border-radius: 12px; font-family: 'Sarabun', sans-serif;
-  font-size: 13px; color: var(--ink3); cursor: pointer; transition: all .2s;
-}
-.btn-demo:hover { border-color: var(--mint-d); color: var(--mint-d); background: var(--mint-l); }
-
-/* ── APP ── */
-#app { display: none; }
-
-/* ── TOPBAR ── */
-.topbar {
-  background: #fff;
-  border-bottom: 1px solid var(--border);
-  padding: 0 28px;
-  height: 60px;
-  display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 100;
-  box-shadow: var(--shadow);
-}
-.topbar-left { display: flex; align-items: center; gap: 12px; }
-.topbar-icon { font-size: 22px; }
-.topbar-title { font-family: 'Mitr', sans-serif; font-size: 17px; font-weight: 500; color: var(--ink); }
-.topbar-sub   { font-size: 11px; color: var(--ink3); margin-top: 1px; }
-.topbar-right { display: flex; align-items: center; gap: 10px; }
-.btn-refresh {
-  padding: 7px 16px; background: var(--warm); color: var(--ink2);
-  border: 1px solid var(--border); border-radius: 10px;
-  font-family: 'Sarabun', sans-serif; font-size: 12px; font-weight: 500;
-  cursor: pointer; transition: all .2s;
-}
-.btn-refresh:hover { background: var(--mint-l); color: var(--mint-d); border-color: var(--mint); }
-.data-time { font-size: 11px; color: var(--ink3); }
-
-/* ── CENTER PILLS ── */
-.center-nav {
-  background: #fff;
-  border-bottom: 1px solid var(--border);
-  padding: 12px 28px;
-  display: flex; gap: 8px; overflow-x: auto;
-  scrollbar-width: none;
-}
-.center-nav::-webkit-scrollbar { display: none; }
-.c-pill {
-  padding: 8px 18px; border-radius: 30px;
-  border: 2px solid var(--border); background: var(--cream);
-  font-family: 'Sarabun', sans-serif; font-size: 13px; font-weight: 500;
-  color: var(--ink2); cursor: pointer; white-space: nowrap;
-  transition: all .2s; display: flex; align-items: center; gap: 7px;
-}
-.c-pill:hover { border-color: var(--ink3); color: var(--ink); }
-.c-pill.active { border-color: currentColor; color: var(--ink); font-weight: 600; }
-.c-pill .pill-icon { font-size: 16px; }
-
-/* ── MAIN ── */
-.main { padding: 24px 28px 60px; max-width: 1400px; margin: 0 auto; }
-
-/* ── KPI ROW ── */
-.kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px,1fr)); gap: 14px; margin-bottom: 22px; }
-.kpi {
-  background: #fff; border-radius: var(--r);
-  border: 1px solid var(--border);
-  padding: 20px 18px 16px;
-  box-shadow: var(--shadow);
-  transition: transform .2s, box-shadow .2s;
-  position: relative; overflow: hidden;
-}
-.kpi:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
-.kpi-emoji { font-size: 28px; margin-bottom: 8px; display: block; }
-.kpi-label { font-size: 11px; font-weight: 500; color: var(--ink3); letter-spacing: .4px; margin-bottom: 4px; }
-.kpi-val   { font-family: 'Mitr', sans-serif; font-size: 28px; font-weight: 500; color: var(--ink); line-height: 1; }
-.kpi-unit  { font-size: 11px; color: var(--ink3); margin-top: 4px; }
-.kpi-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: 11px; font-weight: 600; padding: 3px 10px;
-  border-radius: 20px; margin-top: 8px;
-}
-.badge-good { background: var(--good-l); color: var(--good); }
-.badge-warn { background: var(--warn-l); color: var(--warn); }
-.badge-bad  { background: var(--danger-l); color: var(--danger); }
-.kpi-deco {
-  position: absolute; right: -8px; bottom: -8px;
-  font-size: 52px; opacity: .06; line-height: 1;
-}
-
-/* ── SECTION TITLE ── */
-.sec-title {
-  font-family: 'Mitr', sans-serif;
-  font-size: 15px; font-weight: 500; color: var(--ink);
-  margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
-}
-.sec-title .sec-icon { font-size: 18px; }
-
-/* ── CHARTS ── */
-.charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px,1fr)); gap: 18px; margin-bottom: 24px; }
-.chart-card {
-  background: #fff; border-radius: var(--r);
-  border: 1px solid var(--border); box-shadow: var(--shadow);
-  padding: 20px 20px 16px;
-}
-.chart-card h3 { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
-.chart-sub     { font-size: 11px; color: var(--ink3); margin-bottom: 16px; }
-.chart-wrap    { position: relative; height: 210px; }
-.chart-wrap.tall { height: 260px; }
-
-/* ── TABLE ── */
-.table-card {
-  background: #fff; border-radius: var(--r);
-  border: 1px solid var(--border); box-shadow: var(--shadow);
-  margin-bottom: 24px; overflow: hidden;
-}
-.table-hdr {
-  padding: 14px 20px; border-bottom: 1px solid var(--border);
-  font-size: 13px; font-weight: 600; color: var(--ink);
-  display: flex; align-items: center; gap: 8px;
-}
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 700px; }
-th {
-  padding: 9px 12px; text-align: center;
-  font-size: 11px; font-weight: 600; color: var(--ink3);
-  background: var(--warm); border-bottom: 1px solid var(--border);
-  white-space: nowrap; position: sticky; top: 0;
-}
-th:first-child { text-align: left; }
-td {
-  padding: 9px 12px; text-align: center;
-  border-bottom: 1px solid var(--border);
-  color: var(--ink); white-space: nowrap;
-  transition: background .15s;
-}
-td:first-child { text-align: left; font-weight: 600; }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: var(--cream); }
-tr.total-row td { background: var(--warm) !important; font-weight: 700; }
-.cell-danger { color: var(--danger); font-weight: 700; background: var(--danger-l) !important; border-radius: 6px; }
-.cell-good   { color: var(--good); font-weight: 600; }
-.cell-em     { color: var(--ink3); }
-.pill-tag {
-  display: inline-block; padding: 2px 10px; border-radius: 20px;
-  font-size: 11px; font-weight: 600;
-}
-
-/* ── COMPARE GRID ── */
-.compare-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
-  gap: 16px; margin-bottom: 24px;
-}
-.ctr-mini {
-  background: #fff; border-radius: var(--r);
-  border: 2px solid var(--border); padding: 18px;
-  cursor: pointer; transition: all .2s;
-}
-.ctr-mini:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-.ctr-mini-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-.ctr-mini-icon { font-size: 28px; }
-.ctr-mini-name { font-size: 14px; font-weight: 600; color: var(--ink); }
-.ctr-mini-sub  { font-size: 11px; color: var(--ink3); }
-.ctr-mini-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-.mini-stat { text-align: center; }
-.mini-stat-val { font-family: 'Mitr', sans-serif; font-size: 18px; font-weight: 500; }
-.mini-stat-lbl { font-size: 10px; color: var(--ink3); margin-top: 2px; }
-
-/* ── LOADING ── */
-.loading {
-  text-align: center; padding: 80px 20px; color: var(--ink3);
-}
-.spin {
-  width: 36px; height: 36px; border: 3px solid var(--border);
-  border-top-color: var(--sky-d); border-radius: 50%;
-  animation: spin .7s linear infinite; margin: 0 auto 16px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── ANIM ── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: none; }
-}
-.fade-up   { animation: fadeUp .35s ease both; }
-.fade-up-2 { animation: fadeUp .35s .08s ease both; }
-.fade-up-3 { animation: fadeUp .35s .16s ease both; }
-
-@media (max-width: 640px) {
-  .main { padding: 16px 14px 48px; }
-  .topbar { padding: 0 16px; }
-  .center-nav { padding: 10px 14px; }
-  .kpi-row { grid-template-columns: 1fr 1fr; }
-}
+  :root{
+    --pink:#ffb3c6; --blue:#a8d8ff; --green:#b8f2c9; --purple:#cdb8ff;
+    --orange:#ffd6a5; --bg:#fbfaff; --card:#ffffff; --text:#3a3a4a; --muted:#8a8aa0;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg);color:var(--text);}
+  header{padding:18px 16px 10px;display:flex;justify-content:space-between;align-items:center;}
+  header h1{font-size:20px;margin:0;}
+  header p{margin:2px 0 0;font-size:12px;color:var(--muted);}
+  #refreshBtn{background:var(--blue);border:none;padding:8px 14px;border-radius:20px;font-size:13px;cursor:pointer;}
+  #updatedAt{font-size:11px;color:var(--muted);text-align:right;padding:0 16px;}
+  .tabs{display:flex;gap:8px;overflow-x:auto;padding:10px 16px;-webkit-overflow-scrolling:touch;}
+  .tab{flex:0 0 auto;padding:8px 14px;border-radius:20px;border:2px solid #eee;background:#fff;font-size:13px;cursor:pointer;white-space:nowrap;}
+  .tab.active{border-color:var(--pink);background:#fff0f4;font-weight:600;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;padding:6px 16px;}
+  .card{background:var(--card);border-radius:14px;padding:14px;border-top:4px solid var(--pink);box-shadow:0 2px 6px rgba(0,0,0,.04);}
+  .card .label{font-size:12px;color:var(--muted);}
+  .card .value{font-size:22px;font-weight:700;margin-top:4px;}
+  .card .sub{font-size:11px;color:var(--muted);margin-top:2px;}
+  .chartBox{background:var(--card);border-radius:16px;margin:12px 16px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,.04);}
+  .chartBox h3{margin:0 0 2px;font-size:14px;}
+  .chartBox .desc{font-size:11px;color:var(--muted);margin-bottom:10px;}
+  canvas{max-width:100%;}
+  #loading{text-align:center;padding:40px;color:var(--muted);}
 </style>
 </head>
 <body>
 
-<!-- ── SETUP ── -->
-<div id="setup">
-  <div class="setup-card">
-    <div class="setup-icon">🩺</div>
-    <h1>หน่วยไตเทียม Dashboard</h1>
-    <p>เชื่อมต่อ Google Apps Script เพื่อดึงข้อมูลจาก Google Sheet อัตโนมัติ</p>
-    <div class="steps">
-      <div class="step"><div class="step-n">1</div><div class="step-t">เปิด Google Sheet → <strong>Extensions → Apps Script</strong></div></div>
-      <div class="step"><div class="step-n">2</div><div class="step-t">วางโค้ดที่ได้รับ → <strong>Deploy → New deployment → Web app</strong><br>ตั้งค่า Who has access: <code>Anyone</code></div></div>
-      <div class="step"><div class="step-n">3</div><div class="step-t">Copy <strong>Web app URL</strong> ที่ได้ วางด้านล่าง</div></div>
-    </div>
-    <div class="url-row">
-      <input class="url-input" id="url-input" placeholder="https://script.google.com/macros/s/…/exec" />
-      <button class="btn-connect" onclick="connect()">เชื่อมต่อ</button>
-    </div>
-    <div class="err-msg" id="err-msg">⚠ เชื่อมต่อไม่ได้ — ตรวจสอบ URL และการ Deploy อีกครั้ง</div>
-    <button class="btn-demo" onclick="loadDemo()">🧪 ทดลองดู Demo ก่อน</button>
+<header>
+  <div>
+    <h1>หน่วยไตเทียม Dashboard 2569</h1>
+    <p>ข้อมูลจาก Google Sheet</p>
   </div>
-</div>
+  <button id="refreshBtn" onclick="loadData()">🔄 รีเฟรช</button>
+</header>
+<div id="updatedAt"></div>
 
-<!-- ── APP ── -->
-<div id="app">
-  <div class="topbar">
-    <div class="topbar-left">
-      <div class="topbar-icon">💉</div>
-      <div>
-        <div class="topbar-title">หน่วยไตเทียม Dashboard</div>
-        <div class="topbar-sub" id="data-source">ปีงบประมาณ 2569</div>
-      </div>
-    </div>
-    <div class="topbar-right">
-      <div class="data-time" id="last-updated"></div>
-      <button class="btn-refresh" onclick="refreshData()">🔄 รีเฟรช</button>
-    </div>
-  </div>
-
-  <div class="center-nav" id="center-nav"></div>
-
-  <div class="main" id="main-content">
-    <div class="loading"><div class="spin"></div>กำลังโหลด…</div>
-  </div>
+<div class="tabs" id="tabs"></div>
+<div id="loading">กำลังโหลดข้อมูล...</div>
+<div id="content" style="display:none">
+  <div class="cards" id="cards"></div>
+  <div class="chartBox"><h3>💰 ค่าใช้จ่ายรายเดือน — แต่ละศูนย์</h3><div class="desc">เปรียบเทียบค่าใช้จ่ายทุกศูนย์รายเดือน</div><canvas id="chartExpense" height="220"></canvas></div>
+  <div class="chartBox"><h3>📈 บาท / Case รายเดือน — ภาพรวม</h3><div class="desc">ค่าเฉลี่ยรวมทุกศูนย์ต่อเดือน</div><canvas id="chartBahtCase" height="220"></canvas></div>
+  <div class="chartBox"><h3>👤 จำนวน Case รายเดือน — แต่ละศูนย์</h3><div class="desc">เปรียบเทียบ Case ทุกศูนย์รายเดือน</div><canvas id="chartCases" height="220"></canvas></div>
+  <div class="chartBox"><h3>🔵 ตัวกรองรายเดือน — แต่ละศูนย์</h3><div class="desc">จำนวนตัวกรองที่ใช้</div><canvas id="chartFilters" height="220"></canvas></div>
+  <div class="chartBox" id="reasonBox" style="display:none"><h3>🩺 สาเหตุการทิ้งตัวกรอง</h3><div class="desc">แยกตามสาเหตุ — ศูนย์ที่เลือก</div><canvas id="chartReasons" height="220"></canvas></div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════
-// CONFIG
-// ═══════════════════════════════════════════════
-const MONTHS = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.',
-                'ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+// ⚠️ วาง URL ของ Apps Script Web App ที่ Deploy แล้วตรงนี้
+const API_URL = "https://script.google.com/macros/s/AKfycbx_Pv166h7RVpm83tYw1XNM_4gqduTxmMuCVqjJ5axyPuQ1xopvE4N4S3pcQxD9G_08Ig/exec";
 
-const THEMES = [
-  { color:'--rose',  light:'--rose-l',  dark:'--rose-d',  icon:'🌸', chartColor:'#F4A7B9' },
-  { color:'--sky',   light:'--sky-l',   dark:'--sky-d',   icon:'💧', chartColor:'#A8CCE8' },
-  { color:'--mint',  light:'--mint-l',  dark:'--mint-d',  icon:'🌿', chartColor:'#A8D5BA' },
-  { color:'--lav',   light:'--lav-l',   dark:'--lav-d',   icon:'🌙', chartColor:'#C4B5E8' },
-  { color:'--peach', light:'--peach-l', dark:'--peach-d', icon:'🍊', chartColor:'#F4C4A0' },
-  { color:'--sage',  light:'--sage-l',  dark:'--sage-d',  icon:'🌾', chartColor:'#B5CEB8' },
-];
+const COLORS = ["#ffb3c6","#a8d8ff","#b8f2c9","#cdb8ff","#ffd6a5","#ffe08a"];
+let DATA = null;
+let charts = {};
+let currentCenter = "ALL";
 
-let CENTERS = [];
-let activeCenter = 'all'; // 'all' or index
-let scriptURL = '';
-const chartReg = {};
-
-// ═══════════════════════════════════════════════
-// DEMO DATA
-// ═══════════════════════════════════════════════
-function getDemoData() {
-  const names = ['บุญรักษา','เวียงสา','ค่ายสุริยพงษ์','ปัว','ท่าวังผา','ค่ายพิชัย'];
-  const seed = [
-    [[60,0,4,0,0,0,1392,50030],[57,0,2,0,0,0,1239,45870],[63,0,2,0,1,0,1381,51815],[69,6,0,1,1,0,1382,60005],null,null,null,null,null,null,null,null],
-    [[45,0,2,0,0,0,1050,38000],[48,2,1,0,0,0,1100,42000],[50,0,3,1,0,0,1150,44000],[52,1,2,0,0,1,1200,46000],null,null,null,null,null,null,null,null],
-    [[38,0,1,0,0,0,900,32000],[40,0,2,0,0,0,950,35000],[42,1,1,0,0,0,980,37000],[44,0,2,1,0,0,1010,38500],null,null,null,null,null,null,null,null],
-    [[55,1,3,0,0,0,1300,48000],[58,0,2,0,1,0,1350,50000],[60,2,1,0,0,1,1380,52000],[62,0,3,0,0,0,1420,54000],null,null,null,null,null,null,null,null],
-    [[30,0,1,0,0,0,720,26000],[32,0,2,0,0,0,750,28000],[34,1,1,0,0,0,780,29000],[35,0,1,0,0,0,800,30000],null,null,null,null,null,null,null,null],
-    [[42,0,2,0,0,0,980,36000],[44,1,1,0,0,0,1020,38000],[46,0,3,1,0,0,1060,40000],[48,0,2,0,1,0,1100,42000],null,null,null,null,null,null,null,null],
-  ];
-  return names.map((name,i) => ({
-    name, ...THEMES[i],
-    // monthly: [ครบวาระ, TCV, Leak, Dead, Clot, อื่นๆ, Case, ค่าใช้จ่าย]
-    monthly: seed[i]
-  }));
-}
-
-// ═══════════════════════════════════════════════
-// CONNECT / LOAD
-// ═══════════════════════════════════════════════
-async function connect() {
-  const url = document.getElementById('url-input').value.trim();
-  if (!url) return;
-  scriptURL = url;
-  try {
-    const data = await fetchData(url);
-    CENTERS = data.centers.map((c,i) => ({ ...c, ...THEMES[i] }));
-    localStorage.setItem('dialysis_script_url', url);
-    showApp(`Google Sheets · ${new Date().toLocaleTimeString('th-TH')}`);
-  } catch(e) {
-    document.getElementById('err-msg').style.display = 'block';
+async function loadData(){
+  document.getElementById('loading').style.display='block';
+  document.getElementById('content').style.display='none';
+  try{
+    const res = await fetch(API_URL);
+    DATA = await res.json();
+    buildTabs();
+    render();
+    document.getElementById('updatedAt').textContent =
+      "อัปเดตล่าสุด: " + new Date(DATA._meta.generatedAt).toLocaleString('th-TH');
+  }catch(e){
+    document.getElementById('loading').textContent = "โหลดข้อมูลไม่สำเร็จ ลองรีเฟรชอีกครั้ง";
+    console.error(e);
+    return;
   }
+  document.getElementById('loading').style.display='none';
+  document.getElementById('content').style.display='block';
 }
 
-async function fetchData(url) {
-  const r = await fetch(url);
-  if (!r.ok) throw new Error('fetch fail');
-  return r.json();
+function buildTabs(){
+  const centers = DATA._meta.centers;
+  const wrap = document.getElementById('tabs');
+  wrap.innerHTML = "";
+  const allBtn = mkTab("ภาพรวมทุกศูนย์","ALL");
+  wrap.appendChild(allBtn);
+  centers.forEach(c => wrap.appendChild(mkTab(c,c)));
+}
+function mkTab(label,key){
+  const b = document.createElement('button');
+  b.className = "tab" + (key===currentCenter ? " active":"");
+  b.textContent = label;
+  b.onclick = () => { currentCenter = key; render(); };
+  return b;
 }
 
-function loadDemo() {
-  CENTERS = getDemoData();
-  scriptURL = 'demo';
-  showApp('Demo data · ข้อมูลตัวอย่าง');
+function sumMonthly(metricKey, center){
+  const centers = center==="ALL" ? DATA._meta.centers : [center];
+  const months = Array(12).fill(0);
+  centers.forEach(c => DATA[c][metricKey].monthly.forEach((v,i)=> months[i]+=v));
+  return months;
+}
+function totalOf(metricKey, center){
+  const centers = center==="ALL" ? DATA._meta.centers : [center];
+  return centers.reduce((s,c)=> s + DATA[c][metricKey].total, 0);
 }
 
-async function refreshData() {
-  if (scriptURL === 'demo') { loadDemo(); return; }
-  try {
-    const data = await fetchData(scriptURL);
-    CENTERS = data.centers.map((c,i) => ({ ...c, ...THEMES[i] }));
-    document.getElementById('last-updated').textContent = new Date().toLocaleTimeString('th-TH');
-    renderPage();
-  } catch(e) {}
-}
-
-function showApp(sourceLabel) {
-  document.getElementById('setup').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  document.getElementById('data-source').textContent = sourceLabel;
-  document.getElementById('last-updated').textContent = new Date().toLocaleTimeString('th-TH');
-  buildNav();
-  renderPage();
-}
-
-// ═══════════════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════════════
-function v(c) { return getComputedStyle(document.documentElement).getPropertyValue(c).trim(); }
-function fmt(n, dec=0) {
-  if (n==null || isNaN(n)) return '—';
-  return n.toLocaleString('th-TH', {maximumFractionDigits:dec, minimumFractionDigits:dec});
-}
-function cssvar(name) { return `var(${name})`; }
-
-function centerStats(c) {
-  let totFilter=0, totCase=0, totCost=0, months=0;
-  let tcvTot=0, leakTot=0, deadTot=0, clotTot=0, otherTot=0;
-  c.monthly.forEach(m => {
-    if (!m) return; months++;
-    const filter = m[0]+m[1]+m[2]+m[3]+m[4]+m[5];
-    totFilter += filter;
-    totCase   += m[6];
-    totCost   += m[7];
-    tcvTot  += m[1]; leakTot += m[2]; deadTot += m[3];
-    clotTot += m[4]; otherTot+= m[5];
+function render(){
+  document.querySelectorAll('.tab').forEach((b,i)=>{
+    b.classList.toggle('active',
+      (i===0 && currentCenter==="ALL") || b.textContent===currentCenter);
   });
-  return {
-    totFilter, totCase, totCost, months,
-    tcvTot, leakTot, deadTot, clotTot, otherTot,
-    avg:    totFilter>0 ? totCase/totFilter : null,
-    cpc:    totCase>0   ? totCost/totCase   : null,
-  };
-}
 
-function mFilter(m)  { return m ? m[0]+m[1]+m[2]+m[3]+m[4]+m[5] : null; }
-function mCase(m)    { return m ? m[6] : null; }
-function mCost(m)    { return m ? m[7] : null; }
-function mAvg(m)     { const f=mFilter(m), c=mCase(m); return (f&&c) ? c/f : null; }
-function mCpc(m)     { const co=mCost(m), c=mCase(m); return (co&&c) ? co/c : null; }
+  const cases = totalOf("cases", currentCenter);
+  const expense = totalOf("expense", currentCenter);
+  const disposed = totalOf("disposed", currentCenter);
+  const bahtPerCase = cases ? (expense/cases) : 0;
 
-function destroyChart(id) { if (chartReg[id]) { chartReg[id].destroy(); delete chartReg[id]; } }
-function makeChart(id, config) {
-  destroyChart(id);
-  const ctx = document.getElementById(id);
-  if (!ctx) return;
-  chartReg[id] = new Chart(ctx, config);
-}
-
-const CHART_BASE = {
-  responsive: true, maintainAspectRatio: false,
-  plugins: {
-    legend: { display: false },
-    tooltip: {
-      backgroundColor: '#2C2420', titleColor: '#FDF8F3', bodyColor: '#A89880',
-      padding: 10, cornerRadius: 10,
-    }
-  },
-  scales: {
-    x: { grid: { display: false }, border: { display: false },
-         ticks: { font: { family: 'Sarabun', size: 11 }, color: '#A89880' } },
-    y: { grid: { color: '#F0E8E0' }, border: { display: false },
-         ticks: { font: { family: 'Sarabun', size: 11 }, color: '#A89880' } }
-  }
-};
-
-// ═══════════════════════════════════════════════
-// NAV
-// ═══════════════════════════════════════════════
-function buildNav() {
-  const nav = document.getElementById('center-nav');
-  nav.innerHTML = '';
-
-  const allBtn = document.createElement('button');
-  allBtn.className = 'c-pill' + (activeCenter==='all'?' active':'');
-  allBtn.style.borderColor = activeCenter==='all' ? '#A89880' : '';
-  allBtn.innerHTML = `<span class="pill-icon">🏥</span> ภาพรวมทุกศูนย์`;
-  allBtn.onclick = () => { activeCenter='all'; buildNav(); renderPage(); };
-  nav.appendChild(allBtn);
-
-  CENTERS.forEach((c,i) => {
-    const btn = document.createElement('button');
-    const isActive = activeCenter === i;
-    btn.className = 'c-pill' + (isActive?' active':'');
-    btn.style.cssText = isActive
-      ? `border-color:var(${c.dark});background:var(${c.light});color:var(${c.dark})`
-      : '';
-    btn.innerHTML = `<span class="pill-icon">${c.icon}</span>${c.name}`;
-    btn.onclick = () => { activeCenter=i; buildNav(); renderPage(); };
-    nav.appendChild(btn);
-  });
-}
-
-// ═══════════════════════════════════════════════
-// RENDER
-// ═══════════════════════════════════════════════
-function renderPage() {
-  if (activeCenter === 'all') renderOverview();
-  else renderCenter(activeCenter);
-}
-
-// ─── OVERVIEW ───────────────────────────────────
-function renderOverview() {
-  const mc = document.getElementById('main-content');
-
-  let totF=0,totC=0,totCo=0,totMonths=0;
-  CENTERS.forEach(c => {
-    const s=centerStats(c);
-    totF+=s.totFilter; totC+=s.totCase; totCo+=s.totCost;
-    if(s.months>0) totMonths++;
-  });
-  const overallAvg = totF>0 ? totC/totF : null;
-  const overallCpc = totC>0 ? totCo/totC : null;
-
-  mc.innerHTML = `
-  <div class="kpi-row fade-up">
-    ${kpiCard('🏥','ศูนย์ที่มีข้อมูล',totMonths,'จาก 6 ศูนย์','','--sky','--sky-l','--sky-d')}
-    ${kpiCard('🔵','ตัวกรองรวม',fmt(totF),'ชิ้น รวมทุกศูนย์','','--mint','--mint-l','--mint-d')}
-    ${kpiCard('👤','Case รวม',fmt(totC),'ครั้ง รวมทุกศูนย์','','--lav','--lav-l','--lav-d')}
-    ${kpiCard('💰','ค่าใช้จ่ายรวม',fmt(totCo),'บาท รวมทุกศูนย์','','--peach','--peach-l','--peach-d')}
-    ${kpiCard('📊','บาท / Case',fmt(overallCpc,1),'บาท/ครั้ง เฉลี่ย','','--rose','--rose-l','--rose-d')}
-    ${kpiCard('🎯','เฉลี่ย Case / ตัวกรอง',fmt(overallAvg,1),'ครั้ง/ชิ้น เป้า ≤ 50',
-      overallAvg==null?'':overallAvg<=50?'badge-good:✓ ผ่าน':'badge-bad:⚠ เกิน',
-      '--sage','--sage-l','--sage-d')}
-  </div>
-
-  <div class="charts-grid fade-up-2">
-    <div class="chart-card">
-      <h3>💰 ค่าใช้จ่ายรายเดือน — แต่ละศูนย์</h3>
-      <div class="chart-sub">เปรียบเทียบค่าใช้จ่ายทุกศูนย์รายเดือน</div>
-      <div class="chart-wrap tall"><canvas id="ch-cost-compare"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <h3>📊 บาท / Case รายเดือน — ภาพรวม</h3>
-      <div class="chart-sub">ค่าเฉลี่ยรวมทุกศูนย์ต่อเดือน</div>
-      <div class="chart-wrap tall"><canvas id="ch-cpc-overall"></canvas></div>
-    </div>
-  </div>
-
-  <div class="charts-grid fade-up-2">
-    <div class="chart-card">
-      <h3>👤 จำนวน Case รายเดือน — แต่ละศูนย์</h3>
-      <div class="chart-sub">เปรียบเทียบ Case ทุกศูนย์รายเดือน</div>
-      <div class="chart-wrap tall"><canvas id="ch-case-compare"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <h3>🔵 ตัวกรองรายเดือน — แต่ละศูนย์</h3>
-      <div class="chart-sub">จำนวนตัวกรองที่ใช้</div>
-      <div class="chart-wrap tall"><canvas id="ch-filter-compare"></canvas></div>
-    </div>
-  </div>
-
-  <div class="sec-title fade-up-3"><span class="sec-icon">🏥</span> สรุปรายศูนย์ — คลิกเพื่อดูรายละเอียด</div>
-  <div class="compare-row fade-up-3" id="center-cards"></div>
-
-  <div class="table-card fade-up-3">
-    <div class="table-hdr">📋 ตารางเปรียบเทียบทุกศูนย์</div>
-    <div class="table-wrap" id="compare-table"></div>
-  </div>
+  document.getElementById('cards').innerHTML = `
+    <div class="card" style="border-color:var(--blue)"><div class="label">ตัวกรองรวม</div><div class="value">${disposed.toLocaleString()}</div><div class="sub">ชิ้น</div></div>
+    <div class="card" style="border-color:var(--purple)"><div class="label">Case รวม</div><div class="value">${cases.toLocaleString()}</div><div class="sub">ครั้ง</div></div>
+    <div class="card" style="border-color:var(--orange)"><div class="label">ค่าใช้จ่ายรวม</div><div class="value">${expense.toLocaleString()}</div><div class="sub">บาท</div></div>
+    <div class="card" style="border-color:var(--green)"><div class="label">บาท / Case</div><div class="value">${bahtPerCase.toFixed(1)}</div><div class="sub">บาท/ครั้ง</div></div>
   `;
 
-  buildCenterCards();
-  buildCompareTable();
-  buildOverviewCharts();
-}
+  const months = DATA._meta.months;
 
-function kpiCard(emoji, label, val, unit, badge, clr, light, dark) {
-  let badgeHtml = '';
-  if (badge) {
-    const [cls, txt] = badge.split(':');
-    badgeHtml = `<div class="kpi-badge ${cls}">${txt}</div>`;
+  drawBarByCenter('chartExpense','expense',months);
+  drawBarByCenter('chartCases','cases',months);
+  drawBarByCenter('chartFilters','disposed',months);
+  drawBahtPerCaseLine(months);
+
+  if(currentCenter!=="ALL"){
+    document.getElementById('reasonBox').style.display='block';
+    drawReasons(months);
+  } else {
+    document.getElementById('reasonBox').style.display='none';
   }
-  return `<div class="kpi" style="border-top:3px solid var(${clr})">
-    <span class="kpi-emoji">${emoji}</span>
-    <div class="kpi-label">${label}</div>
-    <div class="kpi-val" style="color:var(${dark})">${val}</div>
-    <div class="kpi-unit">${unit}</div>
-    ${badgeHtml}
-    <div class="kpi-deco">${emoji}</div>
-  </div>`;
 }
 
-function buildOverviewCharts() {
-  // Cost compare (grouped bar)
-  const costDatasets = CENTERS.map((c,i) => ({
-    label: c.name, data: MONTHS.map((_,mi) => mCost(c.monthly[mi])||0),
-    backgroundColor: c.chartColor+'CC', borderRadius: 4, borderSkipped: false,
+function drawBarByCenter(canvasId, metricKey, months){
+  const centers = currentCenter==="ALL" ? DATA._meta.centers : [currentCenter];
+  const datasets = centers.map((c,i)=>({
+    label:c, data: DATA[c][metricKey].monthly,
+    backgroundColor: COLORS[i % COLORS.length], borderRadius:4
   }));
-  makeChart('ch-cost-compare', {
-    type: 'bar',
-    data: { labels: MONTHS, datasets: costDatasets },
-    options: {
-      ...CHART_BASE,
-      plugins: { ...CHART_BASE.plugins,
-        legend: { display: true, position: 'bottom',
-          labels: { font: { family:'Sarabun', size:11 }, color:'#6B5A52', boxWidth:12, padding:10 } }
-      },
-      scales: { ...CHART_BASE.scales, x: { ...CHART_BASE.scales.x, stacked: false } }
-    }
-  });
+  drawChart(canvasId,'bar',months,datasets);
+}
 
-  // CPC overall line
-  const cpcData = MONTHS.map((_,mi) => {
-    let totC=0, totCo=0;
-    CENTERS.forEach(c => { const m=c.monthly[mi]; if(m){totC+=m[6];totCo+=m[7];} });
-    return totC>0 ? totCo/totC : null;
-  });
-  makeChart('ch-cpc-overall', {
-    type: 'line',
-    data: {
-      labels: MONTHS,
-      datasets: [
-        { label:'บาท/Case', data: cpcData, borderColor:'#F4A7B9', backgroundColor:'rgba(244,167,185,.15)',
-          tension:.4, pointRadius:6, fill:true, borderWidth:3, pointBackgroundColor:'#F4A7B9',
-          pointHoverRadius:8 },
-      ]
-    },
-    options: {
-      ...CHART_BASE,
-      plugins: { ...CHART_BASE.plugins,
-        tooltip: { ...CHART_BASE.plugins.tooltip,
-          callbacks: { label: ctx => ` ฿${(ctx.parsed.y||0).toFixed(1)} บาท/Case` }
-        }
-      }
-    }
-  });
+function drawBahtPerCaseLine(months){
+  const expense = sumMonthly('expense', currentCenter);
+  const cases = sumMonthly('cases', currentCenter);
+  const data = months.map((_,i)=> cases[i] ? +(expense[i]/cases[i]).toFixed(1) : null);
+  drawChart('chartBahtCase','line',months,[{
+    label:'บาท/Case', data, borderColor:'#ff7aa2', backgroundColor:'rgba(255,122,162,.15)',
+    fill:true, tension:.3, pointRadius:4
+  }]);
+}
 
-  // Case compare
-  const caseDatasets = CENTERS.map(c => ({
-    label: c.name, data: MONTHS.map((_,mi) => mCase(c.monthly[mi])||0),
-    backgroundColor: c.chartColor+'BB', borderRadius: 4, borderSkipped: false,
+function drawReasons(months){
+  const keys = [['onSchedule','ครบวาระ'],['lowTCV','TCV ต่ำ'],['leak','Leak'],['dead','Dead'],['clot','Clot'],['other','อื่นๆ']];
+  const datasets = keys.map(([k,label],i)=>({
+    label, data: DATA[currentCenter][k].monthly,
+    backgroundColor: COLORS[i % COLORS.length], borderRadius:4
   }));
-  makeChart('ch-case-compare', {
-    type: 'bar',
-    data: { labels: MONTHS, datasets: caseDatasets },
-    options: {
-      ...CHART_BASE,
-      plugins: { ...CHART_BASE.plugins,
-        legend: { display: true, position: 'bottom',
-          labels: { font:{family:'Sarabun',size:11}, color:'#6B5A52', boxWidth:12, padding:10 } }
-      }
-    }
-  });
+  drawChart('chartReasons','bar',months,datasets);
+}
 
-  // Filter compare
-  const filterDatasets = CENTERS.map(c => ({
-    label: c.name, data: MONTHS.map((_,mi) => mFilter(c.monthly[mi])||0),
-    backgroundColor: c.chartColor+'99', borderRadius: 4, borderSkipped: false,
-  }));
-  makeChart('ch-filter-compare', {
-    type: 'bar',
-    data: { labels: MONTHS, datasets: filterDatasets },
-    options: {
-      ...CHART_BASE,
-      plugins: { ...CHART_BASE.plugins,
-        legend: { display: true, position: 'bottom',
-          labels: { font:{family:'Sarabun',size:11}, color:'#6B5A52', boxWidth:12, padding:10 } }
-      }
+function drawChart(canvasId,type,labels,datasets){
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  if(charts[canvasId]) charts[canvasId].destroy();
+  charts[canvasId] = new Chart(ctx,{
+    type, data:{labels,datasets},
+    options:{
+      responsive:true,
+      plugins:{ legend:{position:'bottom', labels:{boxWidth:12,font:{size:10}}} },
+      scales:{ x:{ticks:{font:{size:10}}}, y:{ticks:{font:{size:10}}} }
     }
   });
 }
 
-function buildCenterCards() {
-  const el = document.getElementById('center-cards');
-  el.innerHTML = CENTERS.map((c,i) => {
-    const s = centerStats(c);
-    const avgColor = s.avg==null?'var(--ink3)':s.avg>50?'var(--danger)':'var(--good)';
-    return `<div class="ctr-mini" style="border-color:var(${s.months>0?c.color:'--border'})"
-               onclick="activeCenter=${i};buildNav();renderPage()">
-      <div class="ctr-mini-head">
-        <div class="ctr-mini-icon">${c.icon}</div>
-        <div>
-          <div class="ctr-mini-name">${c.name}</div>
-          <div class="ctr-mini-sub">${s.months>0?s.months+' เดือน':'ยังไม่มีข้อมูล'}</div>
-        </div>
-      </div>
-      <div class="ctr-mini-stats">
-        <div class="mini-stat">
-          <div class="mini-stat-val" style="color:var(${c.dark})">${fmt(s.totFilter)}</div>
-          <div class="mini-stat-lbl">ตัวกรอง</div>
-        </div>
-        <div class="mini-stat">
-          <div class="mini-stat-val">${fmt(s.totCase)}</div>
-          <div class="mini-stat-lbl">Case</div>
-        </div>
-        <div class="mini-stat">
-          <div class="mini-stat-val" style="color:${avgColor}">${fmt(s.avg,1)}</div>
-          <div class="mini-stat-lbl">Case/กรอง</div>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function buildCompareTable() {
-  const el = document.getElementById('compare-table');
-  const rows = CENTERS.map((c,i) => {
-    const s = centerStats(c);
-    const avgClass = s.avg==null?'cell-em':s.avg>50?'cell-danger':'cell-good';
-    return `<tr>
-      <td><span style="margin-right:6px">${c.icon}</span>${c.name}</td>
-      <td>${fmt(s.totFilter)}</td>
-      <td>${fmt(s.totCase)}</td>
-      <td>${fmt(s.totCost)}</td>
-      <td>${fmt(s.cpc,1)}</td>
-      <td class="${avgClass}">${fmt(s.avg,1)}${s.avg>50?' ⚠':s.avg!=null?' ✓':''}</td>
-      <td><span class="pill-tag" style="background:var(${c.light});color:var(${c.dark})">${s.months} เดือน</span></td>
-    </tr>`;
-  }).join('');
-  let totF=0,totC=0,totCo=0;
-  CENTERS.forEach(c=>{const s=centerStats(c);totF+=s.totFilter;totC+=s.totCase;totCo+=s.totCost;});
-  const tAvg=totF>0?totC/totF:null, tCpc=totC>0?totCo/totC:null;
-  el.innerHTML = `<table>
-    <thead><tr>
-      <th>ศูนย์</th><th>ตัวกรอง (ชิ้น)</th><th>Case (ครั้ง)</th>
-      <th>ค่าใช้จ่าย (บาท)</th><th>บาท/Case</th><th>Case/ตัวกรอง</th><th>ข้อมูล</th>
-    </tr></thead>
-    <tbody>${rows}
-    <tr class="total-row">
-      <td>🏥 รวมทุกศูนย์</td>
-      <td>${fmt(totF)}</td><td>${fmt(totC)}</td><td>${fmt(totCo)}</td>
-      <td>${fmt(tCpc,1)}</td>
-      <td class="${tAvg&&tAvg>50?'cell-danger':'cell-good'}">${fmt(tAvg,1)}</td>
-      <td>—</td>
-    </tr></tbody>
-  </table>`;
-}
-
-// ─── CENTER DETAIL ───────────────────────────────
-function renderCenter(ci) {
-  const c = CENTERS[ci];
-  const s = centerStats(c);
-  const mc = document.getElementById('main-content');
-
-  const avgBadge = s.avg==null ? '' :
-    s.avg<=50 ? 'badge-good:✓ ผ่านเกณฑ์' : 'badge-bad:⚠ เกินเป้าหมาย';
-
-  mc.innerHTML = `
-  <div class="kpi-row fade-up" style="--kpi-border:var(${c.color})">
-    ${kpiCard(c.icon,'ศูนย์',c.name,'หน่วยไตเทียม','',c.color,c.light,c.dark)}
-    ${kpiCard('🔵','ตัวกรองรวม',fmt(s.totFilter),'ชิ้น / '+s.months+' เดือน','',c.color,c.light,c.dark)}
-    ${kpiCard('👤','Case รวม',fmt(s.totCase),'ครั้ง / '+s.months+' เดือน','',c.color,c.light,c.dark)}
-    ${kpiCard('💰','ค่าใช้จ่ายรวม',fmt(s.totCost),'บาท / '+s.months+' เดือน','',c.color,c.light,c.dark)}
-    ${kpiCard('💵','บาท / Case',fmt(s.cpc,1),'บาทต่อครั้ง','',c.color,c.light,c.dark)}
-    ${kpiCard('🎯','Case / ตัวกรอง',fmt(s.avg,1),'ครั้ง/ชิ้น เป้า ≤ 50',avgBadge,c.color,c.light,c.dark)}
-  </div>
-
-  <div class="charts-grid fade-up-2">
-    <div class="chart-card">
-      <h3>💵 บาท / Case รายเดือน</h3>
-      <div class="chart-sub">ค่าใช้จ่ายต่อผู้ป่วย 1 ราย แต่ละเดือน</div>
-      <div class="chart-wrap"><canvas id="ch-cpc"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <h3>💰 ค่าใช้จ่ายรวมรายเดือน (บาท)</h3>
-      <div class="chart-sub">ยอดรวมค่าใช้จ่ายทั้งหมดต่อเดือน</div>
-      <div class="chart-wrap"><canvas id="ch-cost"></canvas></div>
-    </div>
-  </div>
-
-  <div class="charts-grid fade-up-2">
-    <div class="chart-card">
-      <h3>🎯 Case / ตัวกรอง รายเดือน</h3>
-      <div class="chart-sub">เส้นแดง = เป้าหมาย 50 ครั้ง · แดงเข้ม = เกินเป้า</div>
-      <div class="chart-wrap"><canvas id="ch-avg"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <h3>🗂 สาเหตุทิ้งตัวกรอง (รวมทั้งปี)</h3>
-      <div class="chart-sub">TCV / Leak / Dead / Clot / อื่นๆ</div>
-      <div class="chart-wrap"><canvas id="ch-cause"></canvas></div>
-    </div>
-  </div>
-
-  <div class="table-card fade-up-3">
-    <div class="table-hdr">${c.icon} ตารางรายเดือน — ${c.name}</div>
-    <div class="table-wrap" id="detail-table"></div>
-  </div>
-  `;
-
-  buildDetailTable(c, s);
-  buildCenterCharts(c, s);
-}
-
-function buildCenterCharts(c, s) {
-  const col  = c.chartColor;
-  const colT = col + '33';
-
-  // บาท/Case line
-  const cpcData = MONTHS.map((_,mi) => mCpc(c.monthly[mi]));
-  makeChart('ch-cpc', {
-    type: 'line',
-    data: {
-      labels: MONTHS,
-      datasets: [{
-        data: cpcData, borderColor: col, backgroundColor: col+'22',
-        tension:.4, fill:true, borderWidth:3,
-        pointRadius: cpcData.map(v => v!=null?6:0),
-        pointBackgroundColor: col, pointHoverRadius:8,
-      }]
-    },
-    options: {
-      ...CHART_BASE,
-      plugins: { ...CHART_BASE.plugins,
-        tooltip: { ...CHART_BASE.plugins.tooltip,
-          callbacks: { label: ctx => ` ฿${(ctx.parsed.y||0).toFixed(1)} บาท/Case` }
-        }
-      }
-    }
-  });
-
-  // ค่าใช้จ่าย bar
-  const costData = MONTHS.map((_,mi) => mCost(c.monthly[mi]));
-  makeChart('ch-cost', {
-    type: 'bar',
-    data: {
-      labels: MONTHS,
-      datasets: [{ data: costData,
-        backgroundColor: costData.map(v => v!=null ? col+'CC' : '#EAE0D5'),
-        borderRadius:8, borderSkipped:false }]
-    },
-    options: {
-      ...CHART_BASE,
-      plugins: { ...CHART_BASE.plugins,
-        tooltip:{ ...CHART_BASE.plugins.tooltip,
-          callbacks:{ label: ctx => ` ฿${(ctx.parsed.y||0).toLocaleString('th-TH')} บาท` }
-        }
-      }
-    }
-  });
-
-  // Case/ตัวกรอง line + threshold
-  const avgData = MONTHS.map((_,mi) => mAvg(c.monthly[mi]));
-  const ptColors = avgData.map(v => v==null?'transparent':v>50?'#E05555':col);
-  makeChart('ch-avg', {
-    type: 'line',
-    data: {
-      labels: MONTHS,
-      datasets: [
-        { label:'Case/กรอง', data: avgData,
-          borderColor: col, backgroundColor: col+'22',
-          tension:.4, fill:true, borderWidth:3,
-          pointRadius: avgData.map(v=>v!=null?7:0),
-          pointBackgroundColor: ptColors,
-          pointBorderColor: ptColors,
-          pointHoverRadius:9,
-        },
-        { label:'เป้าหมาย 50', data: MONTHS.map(()=>50),
-          borderColor:'#E05555', borderDash:[6,4], borderWidth:2,
-          pointRadius:0, fill:false }
-      ]
-    },
-    options: {
-      ...CHART_BASE,
-      plugins: { ...CHART_BASE.plugins,
-        legend:{ display:true, labels:{ font:{family:'Sarabun',size:11}, color:'#6B5A52', boxWidth:12 } },
-        tooltip:{ ...CHART_BASE.plugins.tooltip,
-          callbacks:{ label: ctx => ` ${(ctx.parsed.y||0).toFixed(1)} ครั้ง/ตัวกรอง` }
-        }
-      }
-    }
-  });
-
-  // สาเหตุ donut
-  const causeLabels = ['TCV ต่ำ','Leak','Dead','Clot','อื่นๆ'];
-  const causeTots = [s.tcvTot, s.leakTot, s.deadTot, s.clotTot, s.otherTot];
-  const causeColors = ['#A8CCE8','#F4A7B9','#C4B5E8','#F4C4A0','#A8D5BA'];
-  makeChart('ch-cause', {
-    type: 'doughnut',
-    data: {
-      labels: causeLabels,
-      datasets: [{ data: causeTots, backgroundColor: causeColors,
-        borderColor:'#FDF8F3', borderWidth:3, hoverOffset:8 }]
-    },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      plugins: {
-        legend:{ position:'right', labels:{ font:{family:'Sarabun',size:12}, color:'#6B5A52', boxWidth:14, padding:12 } },
-        tooltip:{ backgroundColor:'#2C2420', bodyColor:'#A89880', padding:10, cornerRadius:10 }
-      }
-    }
-  });
-}
-
-function buildDetailTable(c, s) {
-  const el = document.getElementById('detail-table');
-  const rows = MONTHS.map((m,mi) => {
-    const md = c.monthly[mi];
-    if (!md) return `<tr><td>${m}</td>${Array(10).fill('<td class="cell-em">—</td>').join('')}</tr>`;
-    const filter = md[0]+md[1]+md[2]+md[3]+md[4]+md[5];
-    const avg = filter>0 ? md[6]/filter : null;
-    const cpc = md[6]>0  ? md[7]/md[6]  : null;
-    const avgClass = avg==null?'cell-em':avg>50?'cell-danger':'cell-good';
-    const avgDisp  = avg==null?'—':`${avg.toFixed(1)}${avg>50?' 🔴':''}`;
-    return `<tr>
-      <td>${m}</td>
-      <td>${fmt(md[0])}</td>
-      <td>${md[1]>0?`<span style="color:var(--danger)">${fmt(md[1])}</span>`:'—'}</td>
-      <td>${md[2]>0?`<span style="color:var(--danger)">${fmt(md[2])}</span>`:'—'}</td>
-      <td>${md[3]>0?`<span style="color:var(--danger)">${fmt(md[3])}</span>`:'—'}</td>
-      <td>${md[4]>0?`<span style="color:var(--danger)">${fmt(md[4])}</span>`:'—'}</td>
-      <td>${md[5]>0?fmt(md[5]):'—'}</td>
-      <td style="font-weight:600">${fmt(filter)}</td>
-      <td>${fmt(md[6])}</td>
-      <td class="${avgClass}">${avgDisp}</td>
-      <td>${fmt(md[7])}</td>
-      <td>${fmt(cpc,1)}</td>
-    </tr>`;
-  }).join('');
-
-  el.innerHTML = `<table>
-    <thead><tr>
-      <th>เดือน</th>
-      <th>ครบวาระ</th><th>TCV</th><th>Leak</th><th>Dead</th><th>Clot</th><th>อื่นๆ</th>
-      <th>รวมทิ้ง</th><th>Case</th>
-      <th>Case/กรอง 🎯</th><th>ค่าใช้จ่าย</th><th>บาท/Case</th>
-    </tr></thead>
-    <tbody>${rows}
-    <tr class="total-row">
-      <td>รวม</td>
-      <td>${fmt(s.totFilter - s.tcvTot - s.leakTot - s.deadTot - s.clotTot - s.otherTot)}</td>
-      <td>${fmt(s.tcvTot)}</td><td>${fmt(s.leakTot)}</td>
-      <td>${fmt(s.deadTot)}</td><td>${fmt(s.clotTot)}</td><td>${fmt(s.otherTot)}</td>
-      <td>${fmt(s.totFilter)}</td><td>${fmt(s.totCase)}</td>
-      <td class="${s.avg&&s.avg>50?'cell-danger':'cell-good'}">${fmt(s.avg,1)}</td>
-      <td>${fmt(s.totCost)}</td><td>${fmt(s.cpc,1)}</td>
-    </tr></tbody>
-  </table>`;
-}
-
-// ═══════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════
-window.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('dialysis_script_url');
-  if (saved) {
-    document.getElementById('url-input').value = saved;
-  }
-});
+loadData();
 </script>
 </body>
 </html>
